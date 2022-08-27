@@ -31,7 +31,7 @@ include_directories(/usr/include/python3.8)
 
 # add_subdirectoryでそれぞれのプロジェクトディレクトリを登録する
 file(GLOB dir_list LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ./*)
-list(FILTER dir_list EXCLUDE REGEX "^(.gitignore|.vscode|.*.txt|.*.cpp|.*.md|build|test|docs|figures|.*.png|.*.jpg|opencv_sample)$")
+list(FILTER dir_list EXCLUDE REGEX "^(.gitignore|.vscode|.*.txt|.*.cpp|.*.md|build|test|docs|figures|.*.png|.*.jpg|opencv_sample|.git)$")
 foreach(dir ${dir_list})       
     message("add subdirectory "${dir}) 
     add_subdirectory(${dir})
