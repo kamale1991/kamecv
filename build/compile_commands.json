@@ -1,0 +1,72 @@
+[
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -isystem /usr/include/opencv4 -isystem /usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -isystem /usr/lib/x86_64-linux-gnu/openmpi/include  -g   -pthread -o CMakeFiles/cellular_automaton.dir/main.cpp.o -c /home/shingo/work/2205/cellular_automaton/main.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/main.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -isystem /usr/include/opencv4 -isystem /usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -isystem /usr/lib/x86_64-linux-gnu/openmpi/include  -g   -pthread -o CMakeFiles/cellular_automaton.dir/cellular_automaton/src/binary_image.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/src/binary_image.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/src/binary_image.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -isystem /usr/include/opencv4 -isystem /usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -isystem /usr/lib/x86_64-linux-gnu/openmpi/include  -g   -pthread -o CMakeFiles/cellular_automaton.dir/cellular_automaton/src/template.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/src/template.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/src/template.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/opencv4 -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include  -g   -o CMakeFiles/ca.dir/src/binary_image.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/src/binary_image.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/src/binary_image.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/opencv4 -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include  -g   -o CMakeFiles/ca.dir/src/template.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/src/template.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/src/template.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -isystem /usr/include/opencv4  -g   -o CMakeFiles/cellular_automaton_main.dir/src/binary_image.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/src/binary_image.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/src/binary_image.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -isystem /usr/include/opencv4  -g   -o CMakeFiles/cellular_automaton_main.dir/src/template.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/src/template.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/src/template.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -isystem /usr/include/opencv4  -g   -o CMakeFiles/cellular_automaton_main.dir/cellular_automaton_main.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/cellular_automaton_main.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/cellular_automaton_main.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include -isystem /usr/include/opencv4  -g   -o CMakeFiles/test_wave_fft.dir/wave_fft.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/test/wave_fft.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/test/wave_fft.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include -isystem /usr/include/opencv4  -g   -o CMakeFiles/test_template.dir/template.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/test/template.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/test/template.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include -isystem /usr/include/opencv4  -g   -o CMakeFiles/test_opencv.dir/opencv.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/test/opencv.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/test/opencv.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include -isystem /usr/include/opencv4  -g   -o CMakeFiles/test_matplotlibcpp_sample.dir/matplotlibcpp_sample.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/test/matplotlibcpp_sample.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/test/matplotlibcpp_sample.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include -isystem /usr/include/opencv4  -g   -o CMakeFiles/test_noise.dir/noise.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/test/noise.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/test/noise.cpp"
+},
+{
+  "directory": "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test",
+  "command": "/usr/bin/g++   -I/usr/src -I/opt/intel/mkl/include -I/usr/include/python3.8 -I/home/shingo/work/2205/cellular_automaton/cellular_automaton/include -isystem /usr/include/opencv4  -g   -o CMakeFiles/test_binary_image.dir/binary_image.cpp.o -c /home/shingo/work/2205/cellular_automaton/cellular_automaton/test/binary_image.cpp",
+  "file": "/home/shingo/work/2205/cellular_automaton/cellular_automaton/test/binary_image.cpp"
+}
+]

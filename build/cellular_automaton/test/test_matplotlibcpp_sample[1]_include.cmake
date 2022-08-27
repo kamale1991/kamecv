@@ -1,0 +1,5 @@
+if(EXISTS "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test/test_matplotlibcpp_sample[1]_tests.cmake")
+  include("/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test/test_matplotlibcpp_sample[1]_tests.cmake")
+else()
+  add_test(test_matplotlibcpp_sample_NOT_BUILT test_matplotlibcpp_sample_NOT_BUILT)
+endif()

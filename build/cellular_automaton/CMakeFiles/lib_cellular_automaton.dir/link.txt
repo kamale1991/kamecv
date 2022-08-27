@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblib_cellular_automaton.a  CMakeFiles/lib_cellular_automaton.dir/src/binary_image.cpp.o CMakeFiles/lib_cellular_automaton.dir/src/template.cpp.o
+/usr/bin/ranlib liblib_cellular_automaton.a

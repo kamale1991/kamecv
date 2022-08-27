@@ -1,0 +1,51 @@
+\documentclass[a4j,12pt]{jreport}
+\title{個人プロジェクト}
+\date{\today}
+\begin{document}
+\maketitle
+
+\chapter{概要}
+セルオートマトンの面白そうなトピックを真似してみる
+
+\chapter{仕様}
+背景とかを文章で書いていく。
+
+\chapter{設計}
+\section{ユースケース}
+\section{概念モデリング}
+
+\appendix
+
+\section{FFT}
+
+Complex conjugate-symmetric (CCS) vectorを次のように定義する。
+整数$j\ (0\leq j \leq n-1)$に対して、次の式を計算する。
+\begin{eqnarray}
+    z_j &=& \sum_{k=0}^{n-1} t_k w^{-j k},\\\
+    t_k &=& {\rm cmplx}(r_k,0),\\
+    w &=& \exp\left(\frac{2\pi}{n}i\right)
+\end{eqnarray}
+ここで、$z_j$は次の性質を持つ。
+\begin{eqnarray}
+    z_{n/2 + j} = z_{n/2-j}^*
+\end{eqnarray}
+実際、
+\begin{eqnarray}
+    z_{n/2-j}^* &=& \sum_{k=0}^{n-1}t_k (w^{-(n/2-j)k})^*,
+\end{eqnarray}
+\begin{eqnarray}
+    (w^{-(n/2-j)k})^* = \exp\left(-2^\pi\frac{(n/2-j)k}{n}i\right)^*
+    = \exp\left(2^\pi\frac{(n/2-j)k}{n}i\right)
+    = \exp\left(-2^\pi\frac{(n/2+j)k}{n}i+2\pi i\right)
+    = \exp\left(-2^\pi\frac{(n/2+j)k}{n}i\right)
+    = w^{(n/2+j)k}
+\end{eqnarray}
+となる。
+
+複素数列$\{r_k\}$に対してForward FFTとInverse FFTは次のように定義される。
+\begin{eqnarray}
+    z_j &=& \sum_{k=0}^{n-1}r_k w^{-jk},\\
+    r_j &=& \frac{1}{n}\sum_{k=0}^{n-1}z_k w^{jk}
+\end{eqnarray}
+
+\end{document}
