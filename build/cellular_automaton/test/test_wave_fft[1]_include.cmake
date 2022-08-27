@@ -1,5 +1,5 @@
-if(EXISTS "/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test/test_wave_fft[1]_tests.cmake")
-  include("/home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test/test_wave_fft[1]_tests.cmake")
+if(EXISTS "/home/shingo/work/cvs/kamecv/build/cellular_automaton/test/test_wave_fft[1]_tests.cmake")
+  include("/home/shingo/work/cvs/kamecv/build/cellular_automaton/test/test_wave_fft[1]_tests.cmake")
 else()
   add_test(test_wave_fft_NOT_BUILT test_wave_fft_NOT_BUILT)
 endif()

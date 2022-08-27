@@ -4,8 +4,8 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/shingo/work/2205/cellular_automaton
-BuildDirectory: /home/shingo/work/2205/cellular_automaton/build
+SourceDirectory: /home/shingo/work/cvs/kamecv
+BuildDirectory: /home/shingo/work/cvs/kamecv/build
 
 # Where to place the cost data store
 CostDataFile: 
@@ -26,7 +26,7 @@ SubmitURL: http://
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/shingo/work/2205/cellular_automaton"
+ConfigureCommand: "/usr/bin/cmake" "/home/shingo/work/cvs/kamecv"
 MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
@@ -57,9 +57,9 @@ P4UpdateOptions:
 P4UpdateCustom: 
 
 # Generic update command
-UpdateCommand: 
+UpdateCommand: /usr/bin/git
 UpdateOptions: 
-UpdateType: 
+UpdateType: git
 
 # Compiler info
 Compiler: /usr/bin/g++

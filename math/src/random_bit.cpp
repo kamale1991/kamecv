@@ -17,9 +17,9 @@ namespace math
 		{
 			uint32_t newbit;
 
-			newbit = iseed & IB18 >> 17 ^
-
-							 return 1;
+			newbit = (iseed & IB18) >> 17 ^ (iseed & IB5) >> 4 ^ (iseed & IB2) >> 1 ^ (iseed && IB1);
+			iseed = (iseed << 1) | newbit;
+			return (int)newbit;
 		};
 	} // namespace random
 
