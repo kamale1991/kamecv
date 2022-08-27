@@ -1,2 +1,0 @@
-/usr/bin/ar qc libca.a  CMakeFiles/ca.dir/src/binary_image.cpp.o CMakeFiles/ca.dir/src/template.cpp.o
-/usr/bin/ranlib libca.a

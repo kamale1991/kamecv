@@ -1,5 +1,0 @@
-add_test( BytePixels.set /home/shingo/work/2205/cellular_automaton/build/bin/test_binary_image [==[--gtest_filter=BytePixels.set]==] --gtest_also_run_disabled_tests)
-set_tests_properties( BytePixels.set PROPERTIES WORKING_DIRECTORY /home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test)
-add_test( DecodeJpeg.test /home/shingo/work/2205/cellular_automaton/build/bin/test_binary_image [==[--gtest_filter=DecodeJpeg.test]==] --gtest_also_run_disabled_tests)
-set_tests_properties( DecodeJpeg.test PROPERTIES WORKING_DIRECTORY /home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test)
-set( test_binary_image_TESTS BytePixels.set DecodeJpeg.test)

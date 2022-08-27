@@ -1,5 +1,0 @@
-if(EXISTS "/home/shingo/work/cvs/kamecv/build/cellular_automaton/test/test_noise[1]_tests.cmake")
-  include("/home/shingo/work/cvs/kamecv/build/cellular_automaton/test/test_noise[1]_tests.cmake")
-else()
-  add_test(test_noise_NOT_BUILT test_noise_NOT_BUILT)
-endif()

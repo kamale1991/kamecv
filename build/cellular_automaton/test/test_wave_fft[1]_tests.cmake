@@ -1,7 +1,0 @@
-add_test( wave_fft.open /home/shingo/work/2205/cellular_automaton/build/bin/test_wave_fft [==[--gtest_filter=wave_fft.open]==] --gtest_also_run_disabled_tests)
-set_tests_properties( wave_fft.open PROPERTIES WORKING_DIRECTORY /home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test)
-add_test( wave_fft.test /home/shingo/work/2205/cellular_automaton/build/bin/test_wave_fft [==[--gtest_filter=wave_fft.test]==] --gtest_also_run_disabled_tests)
-set_tests_properties( wave_fft.test PROPERTIES WORKING_DIRECTORY /home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test)
-add_test( wave_fft.molphology /home/shingo/work/2205/cellular_automaton/build/bin/test_wave_fft [==[--gtest_filter=wave_fft.molphology]==] --gtest_also_run_disabled_tests)
-set_tests_properties( wave_fft.molphology PROPERTIES WORKING_DIRECTORY /home/shingo/work/2205/cellular_automaton/build/cellular_automaton/test)
-set( test_wave_fft_TESTS wave_fft.open wave_fft.test wave_fft.molphology)

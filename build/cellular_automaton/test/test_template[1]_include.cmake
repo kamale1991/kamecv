@@ -1,5 +1,0 @@
-if(EXISTS "/home/shingo/work/cvs/kamecv/build/cellular_automaton/test/test_template[1]_tests.cmake")
-  include("/home/shingo/work/cvs/kamecv/build/cellular_automaton/test/test_template[1]_tests.cmake")
-else()
-  add_test(test_template_NOT_BUILT test_template_NOT_BUILT)
-endif()
