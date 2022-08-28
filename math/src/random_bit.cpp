@@ -13,7 +13,7 @@ namespace math
 		{
 		}
 
-		int RandomBit::irbit1(uint32_t &iseed)
+		int RandomBit::irbit_register_representation(uint32_t &iseed)
 		{
 			uint32_t newbit;
 
@@ -22,7 +22,7 @@ namespace math
 			return (int)newbit;
 		};
 
-		int RandomBit::irbit2(uint32_t &iseed)
+		int RandomBit::irbit(uint32_t &iseed)
 		{
 			if (iseed & IB18)
 			{
