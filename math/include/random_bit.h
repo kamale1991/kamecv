@@ -4,15 +4,16 @@ namespace math
 {
 	namespace random
 	{
+		// Numerical Recipe in Cの実装
 		class RandomBit
 		{
 		private:
 			/* data */
-			int IB1 = 1;
-			int IB2 = 2;
-			int IB5 = 16;
-			int IB18 = 131072;
-			int MASK = IB1 + IB2 + IB5;
+			uint32_t IB1 = 1;
+			uint32_t IB2 = 2;
+			uint32_t IB5 = 16;
+			uint32_t IB18 = 131072;
+			uint32_t MASK = IB1 + IB2 + IB5;
 
 		public:
 			// 必要なインターフェースは？
@@ -24,10 +25,40 @@ namespace math
 			RandomBit(/* args */);
 			~RandomBit();
 			// 1ワードの処理で次の乱数を生成する
-			int irbit(uint32_t &iseed);
+			uint32_t irbit(uint32_t &iseed);
 
 			// ハードウェアで実現するためのアルゴリズムの再現
-			int irbit_register_representation(uint32_t &iseed);
+			uint32_t irbit_register_representation(uint32_t &iseed);
+		};
+
+		class RnadomBit32
+		{
+		private:
+			uint32_t IB1 = 1;
+			uint32_t IB2 = 0x00000001;	// 2^1
+			uint32_t IB3 = 0x00000004;	// 2^2
+			uint32_t IB5 = 0x00000010;	// 2^4
+			uint32_t IB7 = 0x00000040;	// 2^6
+			uint32_t IB32 = 0x80000000; // 2^31
+
+		public:
+			uint32_t irbit(uint32_t &iseed);
+		};
+
+		// Wikipediaの実装
+		class RandomBit16
+		{
+		private:
+			uint16_t IB1 = 1;
+			uint16_t IB2 = 0x0001;
+			uint16_t IB3 = 0x0004;
+			uint16_t IB5 = 0x0010;
+			uint16_t IB16 = 0x8000;
+			uint16_t MASK = IB2 + IB3 + IB5;
+
+		public:
+			uint16_t irbit(uint16_t &iseed);
+			uint16_t irbit2(uint16_t &iseed);
 		};
 
 	} // namespace random
