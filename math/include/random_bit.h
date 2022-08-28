@@ -39,21 +39,21 @@ namespace math
 			uint32_t IB3 = 0x00000004;	// 2^2
 			uint32_t IB5 = 0x00000010;	// 2^4
 			uint32_t IB7 = 0x00000040;	// 2^6
-			uint32_t IB32 = 0x00000001; // 2^31
+			uint32_t IB32 = 0x80000000; // 2^31
 
 		public:
 			uint32_t irbit(uint32_t &iseed);
 		};
 
-		// Wikipediのの実装
+		// Wikipediaの実装
 		class RandomBit16
 		{
 		private:
 			uint16_t IB1 = 1;
-			uint16_t IB2 = 2;
-			uint16_t IB3 = 4;
-			uint16_t IB5 = 16;
-			uint16_t IB16 = 32768;
+			uint16_t IB2 = 0x0001;
+			uint16_t IB3 = 0x0004;
+			uint16_t IB5 = 0x0010;
+			uint16_t IB16 = 0x8000;
 			uint16_t MASK = IB2 + IB3 + IB5;
 
 		public:
