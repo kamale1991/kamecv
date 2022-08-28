@@ -21,6 +21,21 @@ namespace math
 			iseed = (iseed << 1) | newbit;
 			return (int)newbit;
 		};
+
+		int RandomBit::irbit2(uint32_t &iseed)
+		{
+			if (iseed & IB18)
+			{
+				iseed = ((iseed ^ MASK) << 1) | IB1;
+				return 1;
+			}
+			else
+			{
+				iseed <<= 1;
+				return 0;
+			}
+		}
+
 	} // namespace random
 
 } // namespace math

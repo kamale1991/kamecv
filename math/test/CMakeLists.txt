@@ -14,6 +14,7 @@ foreach(test_src ${test_srcs})
         gtest
         gtest_main
         pthread
+				mymath
     )
     message(${test_exe})
     gtest_discover_tests(${test_exe})
