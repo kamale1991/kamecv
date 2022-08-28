@@ -6,24 +6,6 @@ namespace math
 {
 	namespace random
 	{
-		TEST(RandomBit, test)
-		{
-			RandomBit *rand;
-			uint32_t iseed = 1;
-			uint32_t iseed2 = 1;
-			int bit, bit2;
-
-			for (uint32_t i = 0; i < 100; i++)
-			{
-				bit = rand->irbit(iseed);
-				bit2 = rand->irbit_register_representation(iseed2);
-				std::cout << "i: " << i << " (iseed,bit) = (" << iseed << "," << bit << ") (" << iseed2 << "," << bit2 << ")" << std::endl;
-			}
-			uint32_t x = 1;
-			std::cout << ((x << 1) | 1) << std::endl;
-			// EXPECT_EQ(a, golden);
-		}
-
 		TEST(RandomBit16, test)
 		{
 			RandomBit16 *rand16;
@@ -35,8 +17,6 @@ namespace math
 			{
 				bit = rand16->irbit(iseed);
 				bitset1 = iseed;
-				std::cout << bitset1 << std::endl;
-				std::cout << "i: " << i << " iseed: " << iseed << " bit: " << bit << std::endl;
 			}
 		}
 
@@ -49,8 +29,6 @@ namespace math
 			{
 				rand16->irbit2(iseed);
 				bitset = iseed;
-
-				std::cout << bitset << std::endl;
 			}
 		}
 
