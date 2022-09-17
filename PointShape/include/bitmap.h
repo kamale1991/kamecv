@@ -112,7 +112,7 @@ namespace PointShape
 			{
 				for (uint64_t ix2 = 0; ix2 < Nx2_; ix2++)
 				{
-					set(ix1, ix2, vector.at(ix1).at(ix2));
+					set(ix1, ix2, vector.at(ix2).at(ix1));
 				}
 			}
 		}
@@ -132,7 +132,7 @@ namespace PointShape
 			}
 			if (origin_ == Origin::LeftBottom)
 			{
-				for (uint64_t ix2 = Nx2_ - 1; ix2 != 0; ix2--)
+				for (uint64_t ix2 = Nx2_ - 1; ix2 < Nx2_; ix2--)
 				{
 					for (uint64_t ix1 = 0; ix1 < Nx1_; ix1++)
 					{
