@@ -83,7 +83,6 @@ namespace PointShape
 	public:
 		Bitmap(uint64_t column_number, uint64_t row_number, Origin origin, MatrixTraversal traversal) : column_number_(column_number), row_number_(row_number), origin_(origin), traversal_(traversal)
 		{
-			std::cout << traversal_ << std::endl;
 			initialize_();
 		};
 		~Bitmap()
@@ -98,14 +97,14 @@ namespace PointShape
 
 		void set_2dim_vector(std::vector<std::vector<T>> vector)
 		{
-			if (Nx1_ != vector.size())
+			if (Nx1_ != vector.at(0).size())
 			{
-				std::cout << "[Error] Invalid Nx1 size, Nx1=" << Nx1_ << " input=" << vector.size() << std::endl;
+				std::cout << "[Error] Invalid Nx1 size, Nx1=" << Nx1_ << " input=" << vector.at(0).size() << std::endl;
 				return;
 			}
-			if (Nx2_ != vector.at(0).size())
+			if (Nx2_ != vector.size())
 			{
-				std::cout << "[Error] Invalid Nx2 size, Nx2=" << Nx2_ << " input=" << vector.at(0).size() << std::endl;
+				std::cout << "[Error] Invalid Nx2 size, Nx2=" << Nx2_ << " input=" << vector.size() << std::endl;
 				return;
 			}
 			for (uint64_t ix1 = 0; ix1 < Nx1_; ix1++)

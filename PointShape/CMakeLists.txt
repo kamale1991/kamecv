@@ -24,4 +24,4 @@ target_link_libraries(morph_main
 
 
 # ./testのビルドへ進む
-#add_subdirectory(test)
+add_subdirectory(test)
