@@ -17,14 +17,14 @@ void StructureElement::erosion(GrayScaleImage *operand, GrayScaleImage *out)
 	uint64_t jx2_start, jx2_end;
 	uint64_t ix1_residual_pixel, ix2_residual_pixel;
 
-	uint64_t se_
+	// uint64_t se_
 
-			for (uint64_t ix1 = 0; ix1 < mp_img.Nx1; ix1++)
+	for (uint64_t ix1 = 0; ix1 < mp_img.Nx1; ix1++)
 	{
-		ix1_unprocessed = mp_img.Nx1 - 1 - ix1;
+		uint64_t ix1_unprocessed = mp_img.Nx1 - 1 - ix1;
 		for (uint64_t ix2 = 0; ix2 < mp_img.Nx2; ix2++)
 		{
-			ix2_unprocessed = mp_img.Nx2 - 1 - ix2;
+			uint64_t ix2_unprocessed = mp_img.Nx2 - 1 - ix2;
 			out_pix = 255;
 			jx1_start = 0;
 			jx1_end = Nx1_;
@@ -34,7 +34,7 @@ void StructureElement::erosion(GrayScaleImage *operand, GrayScaleImage *out)
 			}
 			if (ix1 + Nx1_ - 1 - center_offset_x1_ > mp_img.Nx1 - 1)
 			{
-				jx1_end = center_offset_x1_ + ;
+				// jx1_end = center_offset_x1_ + ;
 			}
 
 			for (uint64_t jx1 = jx1_start; jx1 < jx1_end; jx1++)
