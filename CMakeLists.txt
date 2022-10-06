@@ -31,7 +31,7 @@ include_directories(/usr/include/python3.8)
 
 # add_subdirectoryでそれぞれのプロジェクトディレクトリを登録する
 file(GLOB dir_list LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ./*)
-set(dir_list cellular_automaton;math;PointShape)
+set(dir_list cellular_automaton;math;PointShape;Game)
 foreach(dir ${dir_list})       
     message("add subdirectory "${dir}) 
     add_subdirectory(${dir})
