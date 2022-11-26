@@ -20,6 +20,7 @@ find_package(MPI REQUIRED)
 
 # MKL
 include_directories(/opt/intel/mkl/include)
+find_library(MKL_LIB /opt/intel/mkl/lib/intel64)
 
 # OpenCV
 #include_directories(/usr/include/opencv4)
@@ -31,7 +32,7 @@ include_directories(/usr/include/python3.8)
 
 # add_subdirectoryでそれぞれのプロジェクトディレクトリを登録する
 file(GLOB dir_list LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ./*)
-list(FILTER dir_list EXCLUDE REGEX "^(.gitignore|.vscode|.*.txt|.*.cpp|.*.md|build|test|docs|figures|.*.png|.*.jpg|opencv_sample|.git)$")
+set(dir_list cellular_automaton;math;PointShape;Game)
 foreach(dir ${dir_list})       
     message("add subdirectory "${dir}) 
     add_subdirectory(${dir})
