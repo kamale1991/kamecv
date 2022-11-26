@@ -3,3 +3,7 @@ build/
 cellular_automaton/.vscode/
 cellular_automaton/build/
 opecv_sample/
+glsl_sample/
+.vscode/
+docs/
+figures/

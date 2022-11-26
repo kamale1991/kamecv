@@ -1,15 +1,20 @@
 cmake_minimum_required(VERSION 3.16.0)
 get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 message("Here is "${DIR_NAME})
-set(DIR_NAME cellular_automaton)
+set(DIR_NAME opencv_test)
 
 file(GLOB_RECURSE includes include/*.h)
 file(GLOB_RECURSE srcs src/*.cpp)
 set(DIR_MAIN ${DIR_NAME}_main)
 
-add_executable(${DIR_MAIN} ${srcs} ${DIR_NAME}_main.cpp)
-target_link_libraries(${DIR_MAIN}
+add_executable(celluar_automaton ${srcs} cellulat_automaton.cpp)
+target_link_libraries(cellular_automaton
     ${OpenCV_LIBRARIES}    
+)
+
+add_executable(dft_tool ${srcs} dft_tool.cpp)
+target_link_libraries(dft_tool
+		${OpenCV_LIBRARIES}
 )
 
 add_library(ca ${srcs})
