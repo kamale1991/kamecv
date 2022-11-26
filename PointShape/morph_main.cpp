@@ -12,8 +12,10 @@
 #include <iostream>
 #include <vector>
 #include "include/morphology.h"
+#include "include/filter_gaussian.h"
 using namespace PointShape;
-int main()
+
+void morp_test()
 {
 	std::cout << "<<Molphology Test>>" << std::endl;
 
@@ -48,4 +50,32 @@ int main()
 	se.erosion(&img, &out);
 	img.print();
 	out.print();
+}
+
+void gaussian_fileter_test()
+{
+	std::unique_ptr<GaussianFilter> gauss(new GaussianFilter());
+	gauss->initialize();
+	gauss->show();
+
+	uint64_t ncol_img = 16;
+	uint64_t nrow_img = 8;
+	std::vector<std::vector<float>> img_vec(nrow_img, std::vector<float>(ncol_img));
+	for (int iy = 0; iy < nrow_img; iy++)
+	{
+		for (int ix = 0; ix < ncol_img; ix++)
+		{
+			img_vec.at(iy).at(ix) = float(ix + ncol_img * iy);
+		}
+	}
+	std::unique_ptr<fGrayImage> img(new fGrayImage(ncol_img, nrow_img));
+	img->set_2dim_vector(img_vec);
+	img->print();
+	std::unique_ptr<fGrayImage> out = gauss->convolution(img);
+	out->print();
+};
+
+int main()
+{
+	gaussian_fileter_test();
 }

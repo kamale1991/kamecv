@@ -99,12 +99,12 @@ namespace PointShape
 		{
 			if (Nx1_ != vector.at(0).size())
 			{
-				std::cout << "[Error] Invalid Nx1 size, Nx1=" << Nx1_ << " input=" << vector.at(0).size() << std::endl;
+				std::cerr << "[Error] Invalid Nx1 size, Nx1=" << Nx1_ << " input=" << vector.at(0).size() << std::endl;
 				return;
 			}
 			if (Nx2_ != vector.size())
 			{
-				std::cout << "[Error] Invalid Nx2 size, Nx2=" << Nx2_ << " input=" << vector.size() << std::endl;
+				std::cerr << "[Error] Invalid Nx2 size, Nx2=" << Nx2_ << " input=" << vector.size() << std::endl;
 				return;
 			}
 			for (uint64_t ix1 = 0; ix1 < Nx1_; ix1++)
@@ -120,6 +120,8 @@ namespace PointShape
 		{
 			return data_[index_(ix1, ix2)];
 		}
+
+		T *get_ptr() { return data_; };
 
 		void print() const
 		{

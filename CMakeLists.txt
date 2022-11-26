@@ -20,6 +20,7 @@ find_package(MPI REQUIRED)
 
 # MKL
 include_directories(/opt/intel/mkl/include)
+find_library(MKL_LIB /opt/intel/mkl/lib/intel64)
 
 # OpenCV
 #include_directories(/usr/include/opencv4)
