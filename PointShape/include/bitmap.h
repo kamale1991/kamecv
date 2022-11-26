@@ -9,8 +9,7 @@
  *
  */
 
-#ifndef PS_BITMAP_H_
-#define PS_BITMAP_H_
+#pragma once
 
 #include <iostream>
 #include <stdint.h>
@@ -166,5 +165,3 @@ namespace PointShape
 	};
 
 } // namespace PointShape
-
-#endif
