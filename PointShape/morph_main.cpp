@@ -13,6 +13,7 @@
 #include <vector>
 #include "include/morphology.h"
 #include "include/filter_gaussian.h"
+#include <jpeglib.h>
 using namespace PointShape;
 
 void morp_test()
@@ -75,7 +76,14 @@ void gaussian_fileter_test()
 	out->print();
 };
 
+void open_jpeg()
+{
+	std::cout << "Open Jpeg file" << std::endl;
+	std::string jpeg_file = "../";
+};
+
 int main()
 {
-	gaussian_fileter_test();
+	// gaussian_fileter_test();
+	open_jpeg();
 }
