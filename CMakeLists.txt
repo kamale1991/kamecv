@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.0)
-project(cellular_automaton VERSION 0.1.0)
+project(kamecv VERSION 0.1.0)
 
 
 file(MAKE_DIRECTORY build)
@@ -43,6 +43,9 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})    
 
+# Boost
+find_package(Boost COMPONENTS program_options REQUIRED)
+
 # Python
 include_directories(/usr/include/python3.8)
 
@@ -66,6 +69,19 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} 
     MPI::MPI_CXX
     ${OpenCV_LIBRARIES}
+)
+
+add_executable(figure_experiment 
+    main_figure_experiment.cpp
+    ${${srcs}}
+    )
+target_link_libraries(figure_experiment
+    MPI::MPI_CXX
+    ${OpenCV_LIBRARIES}
+		mymath
+		point_shape
+		Eigen3::Eigen
+		Boost::program_options
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 enable_testing()

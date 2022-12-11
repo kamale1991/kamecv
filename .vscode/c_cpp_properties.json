@@ -7,6 +7,9 @@
 				"/usr/include/",
 				"/opt/intel/mkl/include/",
 				"/usr/include/opencv4/",
+				"/usr/include/eigen3/",
+				"/usr/include/eigen3/Eigen/",
+				"/usr/include/eigen3/Eigen/src/"
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/g++",

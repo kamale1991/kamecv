@@ -63,8 +63,6 @@ namespace ChatGPTAnswer
 				temp[i][j] = sum;
 			}
 		}
-		// 一時的に保存した平滑化後の値を元の配列に代入する
-		// for (int i =
 	}
 
 	// 3x3の構造体要素{{0,1,0}, {0, 1, 0}, {0, 1, 0}}でerosionを行う関数
