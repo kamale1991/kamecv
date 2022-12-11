@@ -55,16 +55,14 @@ set(dir_list math PointShape Game)
 foreach(dir ${dir_list})       
     message("add subdirectory " ${dir}) 
     add_subdirectory(${dir})
-
-    file(GLOB srcs_${dir} "${dir}/src/*.cpp")
-    list(APPEND srcs srcs_${dir})
 endforeach()
 
-message(${srcs})
+file(GLOB src_service "service/src/*.cpp")
+
 ## PROJECT_NAMEと同じ名前の実行体にmain.cppをリンクする
 add_executable(${PROJECT_NAME} 
     main.cpp
-    ${${srcs}}
+    service/src/
     )
 target_link_libraries(${PROJECT_NAME} 
     MPI::MPI_CXX
@@ -73,7 +71,7 @@ target_link_libraries(${PROJECT_NAME}
 
 add_executable(figure_experiment 
     main_figure_experiment.cpp
-    ${${srcs}}
+    ${src_service}
     )
 target_link_libraries(figure_experiment
     MPI::MPI_CXX

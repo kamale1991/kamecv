@@ -4,28 +4,29 @@
 
 #include <boost/program_options.hpp>
 
-// test()関数の定義
-void test(const std::vector<int> &args)
-{
-	std::cout << "args[0]: " << args[0] << std::endl;
-	std::cout << "args[1]: " << args[1] << std::endl;
-	std::cout << "args[2]: " << args[2] << std::endl;
-}
+#include "service/include/figure_experiment.h"
 
 int main(int argc, char *argv[])
 {
+	std::cout << "Hello, this is tool for your figure experiment." << std::endl;
 	// 引数を解析するためのオブジェクトを作成する
 	boost::program_options::options_description desc("Options");
 	desc.add_options()
 			// "test"オプションを定義する
 			("test", boost::program_options::value<std::vector<int>>()->multitoken(),
-			 "test option");
+			 "test option")("help,h", "show help message");
 
 	// コマンドライン引数を解析する
 	boost::program_options::variables_map vm;
 	boost::program_options::store(
 			boost::program_options::parse_command_line(argc, argv, desc), vm);
 	boost::program_options::notify(vm);
+
+	if (vm.count("help") || argc == 1)
+	{
+		std::cout << desc << std::endl;
+		return 0;
+	}
 
 	// "test"オプションが与えられている場合は、test()を実行する
 	if (vm.count("test"))
@@ -35,7 +36,9 @@ int main(int argc, char *argv[])
 
 		// test()を実行する
 		test(args);
+		return 1;
 	}
 
+	std::cout << desc << std::endl;
 	return 0;
 }
