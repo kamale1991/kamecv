@@ -1,13 +1,18 @@
 # CV関連の個人コード
 
-## 数値計算関係
+## ビルド方法
 
-math/
+CMakeを使用して以下のコマンドを使用することで、`build/bin/`ディレクトリに実行ファイルが生成される。
 
-## OpenCVを使用したツールなど
+```s
+cd kamecv
+cmake -B build -S .
+cmake --build build
+```
 
-opencv_tools/
+自動テストを行う場合には、`build`ディレクトリに移動して以下のコマンドを使用する。
 
-## 自作画像処理ライブラリ
-
-PointShape/
+```s
+cd build
+make test
+```

@@ -3,8 +3,20 @@ project(cellular_automaton VERSION 0.1.0)
 include(GoogleTest)
 include(CTest)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/lib)
+file(MAKE_DIRECTORY build)
+file(MAKE_DIRECTORY build/bin)
+file(MAKE_DIRECTORY build/lib)
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_BUILD_FILES_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_BUILD_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_BINARY_DIR  ${CMAKE_BINARY_DIR})
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_CACHEFILE_DIR ${CMAKE_BINARY_DIR})
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # GoogleTest
 include_directories(/usr/src)
@@ -32,9 +44,9 @@ include_directories(/usr/include/python3.8)
 
 # add_subdirectoryでそれぞれのプロジェクトディレクトリを登録する
 file(GLOB dir_list LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ./*)
-set(dir_list cellular_automaton;math;PointShape;Game)
+set(dir_list math PointShape Game)
 foreach(dir ${dir_list})       
-    message("add subdirectory "${dir}) 
+    message("add subdirectory " ${dir}) 
     add_subdirectory(${dir})
 
     file(GLOB srcs_${dir} "${dir}/src/*.cpp")
