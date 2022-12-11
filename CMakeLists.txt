@@ -51,7 +51,7 @@ include_directories(/usr/include/python3.8)
 
 # add_subdirectoryでそれぞれのプロジェクトディレクトリを登録する
 file(GLOB dir_list LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ./*)
-set(dir_list math PointShape Game)
+set(dir_list math PointShape Game opencv_sample_src)
 foreach(dir ${dir_list})       
     message("add subdirectory " ${dir}) 
     add_subdirectory(${dir})
@@ -81,5 +81,19 @@ target_link_libraries(figure_experiment
 		Eigen3::Eigen
 		Boost::program_options
 )
+
+add_executable(signal_experiment 
+    main_signal_experiment.cpp
+    ${src_service}
+    )
+target_link_libraries(signal_experiment
+    MPI::MPI_CXX
+    ${OpenCV_LIBRARIES}
+		mymath
+		point_shape
+		Eigen3::Eigen
+		Boost::program_options
+)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 enable_testing()

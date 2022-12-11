@@ -5,3 +5,4 @@ glsl_sample/*
 .vscode/*
 docs/*
 figures/*
+opencv_sample_src/*
