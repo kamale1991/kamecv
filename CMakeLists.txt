@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0)
 project(cellular_automaton VERSION 0.1.0)
-include(GoogleTest)
-include(CTest)
+
 
 file(MAKE_DIRECTORY build)
 file(MAKE_DIRECTORY build/bin)
@@ -19,6 +18,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # GoogleTest
+#include(GoogleTest)
+#include(CTest)
 include_directories(/usr/src)
 find_package(GTest REQUIRED)
 
@@ -33,6 +34,9 @@ find_package(MPI REQUIRED)
 # MKL
 include_directories(/opt/intel/mkl/include)
 find_library(MKL_LIB /opt/intel/mkl/lib/intel64)
+
+# Eigen
+find_package(Eigen3 REQUIRED)
 
 # OpenCV
 #include_directories(/usr/include/opencv4)
