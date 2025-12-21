@@ -1,66 +1,81 @@
 // ======================================================================
 // pillbox_tm010_1p5D.pro
 //
-// TM010 eigenmode of an axisymmetric pillbox cavity (1.5D = 2D meridian + 2πr weight)
+// The eigenmode of an axisymmetric pillbox cavity (1.5D = 2D meridian + 2πr weight)
 //
 // IMPORTANT (geometry/mesh):
-//   - This .pro expects a 2D meridian mesh (X = axial, Y = radius), NOT the full 3D rotated mesh.
+//   - This .pro expects a 2D meridian mesh (Y = axial, X = radius), NOT the full 3D rotated mesh.
 //   - Physical tags expected in the .msh:
-//       Surface(1)  : Vacuum domain (the 2D rectangle)
-//       Curve(20)   : Axis (Y=0)
-//       Curve(21)   : PEC wall (all conductor curves: z=0, r=R, z=L)
-//       Curve(22)   : Side wall only (r=R)  <-- Dirichlet for Ez in this scalar TM010 model
+//       Surface(101)  : Vacuum domain (the 2D rectangle)
+//       Line(202)   : Axis (X=0)
+//       Line(201)   : PEC wall (all conductor curves: z=0, r=R, z=L)
 //
 // What it does:
-//   1) Solve generalized eigenproblem for Ez (scalar) -> eigenvalue λ = ω^2
-//   2) Post-process Ez, Hphi, Hr (=0 for m=0 TM) distributions
+//   1) Solve generalized eigenproblem for E (1-Form) (m=0)-> eigenvalue λ = ω^2
+//   2) Post-process frequency, E, H
 //   3) Compute stored energy U, wall loss Ploss (skin-depth model), Q0 and R/Q
 //
 // Notes:
-//   - This scalar Ez formulation is appropriate for TM0n0-like modes (TM010 here).
-//   - For modes with nontrivial Er (e.g., TM01p with p>0), a full vector formulation is safer.
+//   - This is a simplified 2.5D (axisymmetric) model for the m=0 modes only.
 // ======================================================================
+
 
 DefineConstant[
   // Physical constants
+  f0  = 5.712e9,             // target frequency [Hz] (reference)
+  c0  = 299792458,           // speed of light [m/s]
+  x01 = 2.404825557695773,   // J0 first root
+
+  R = x01 * c0 / (2*Pi*f0),  // ~ 20.088 mm for 5.712 GHz
+  L = c0/(2*f0),             // example length: lambda/2 ~ 26.24 mm (edit freely)
   mu0 = 4.e-7 * Pi,
-  eps0 = 8.854187817e-12,
+  eps0 = 1.0 / (mu0 * c0 * c0),
 
   // Wall material conductivity (S/m). Copper ~ 5.8e7
   sigma_wall = 5.8e7,
 
   // Eigen solve control
   neig = 1,                 // only TM010
-  f_target = 1.0e9,         // Hz (used only for spectral shift; set near expected f)
+  f_target = f0,         // Hz (used only for spectral shift; set near expected f)
   shift_re = (2*Pi*f_target)^2,
-  shift_im = 0.0,
+  shift_im = 1.0,
 
   // FEM order (1 or 2 are typical)
-  pOrder = 2
+  pOrder = 2  
 ];
+
+Function {
+  eps[] = eps0;
+  mu[]  = mu0;
+  w[] = 2.0*Pi*Y[];
+}
 
 // -------------------------
 // Groups (physical tags)
 // -------------------------
 Group{
-  Vacuum  = Region[1];
-  Axis    = Region[20];
-  WallAll = Region[21];
-  WallR   = Region[22];   // r = R only
+  Omega  = Region[101];  
+  AllWall = Region[201];
+  Axis    = Region[202];  
 }
 
 // -------------------------
 // Jacobian methods
 // -------------------------
 Jacobian{
-  { Name Vol;
+  { Name JVol;
     Case{
-      { Region All; Jacobian Vol; }
+      { Region Omega; Jacobian VolAxi; } // 2.5 D
     }
   }
-  { Name Sur;
+  { Name JWall;
     Case{
-      { Region All; Jacobian Sur; }
+      { Region AllWall; Jacobian SurAxi; } // 2.5 D 
+    }
+  }
+  { Name JAxis;
+    Case{
+      { Region Axis; Jacobian Sur; }
     }
   }
 }
@@ -70,9 +85,9 @@ Jacobian{
 // Constraint (Dirichlet Ez=0 on side wall r=R)
 // -------------------------
 Constraint{
-  { Name Ez0_on_WallR; Type Assign;
+  { Name PEC; Type Assign;
     Case{
-      { Region WallR; Value 0.0; }
+      { Region AllWall; Value 0.0; }
     }
   }
 }
@@ -85,61 +100,53 @@ Integration{
     Case{
       { Type Gauss;
         Case{
-          { GeoElement Line;     NumberOfPoints 4; }
-          { GeoElement Triangle; NumberOfPoints 7; }
-          { GeoElement Quadrangle; NumberOfPoints 9; } // 四角形メッシュの時だけ必要（あっても害はほぼ無い）
+          { GeoElement Line;       NumberOfPoints 4; }
+          { GeoElement Triangle;   NumberOfPoints 4; }
+          { GeoElement Quadrangle; NumberOfPoints 4; } // 四角形メッシュの時だけ必要（あっても害はほぼ無い）
         }
       }
     }
   }
 }
 
-
 // -------------------------
-// Function space (scalar nodal Ez)
+// Function space
 // -------------------------
 FunctionSpace{
-  { Name Hgrad_Ez; Type Form0;
+  { Name Hcurl; Type Form1;
     BasisFunction{
-      { Name sn; NameOfCoef Ez; Function BF_Node;
-        Support Vacuum; Entity NodesOf[All]; }
+      { Name sn; NameOfCoef en; Function BF_Edge;
+        Support Region[{Omega, Axis, AllWall}]; Entity EdgesOf[All]; }
     }
-    // polynomial order (if your GetDP build supports it)
-    // NOTE: if your GetDP complains here, remove the line below and set mesh order in Gmsh.
-    // PolynomialOrder { pOrder; }
 
     Constraint{
-      { NameOfCoef Ez; EntityType NodesOf;
-        NameOfConstraint Ez0_on_WallR; }
+      { NameOfCoef en; EntityType EdgesOf;
+        NameOfConstraint PEC; }
     }
   }
 }
 
 // -------------------------
-// Formulation: axisymmetric scalar Helmholtz eigenproblem for Ez
-//
-// Weak form (with 1.5D weight 2πr = 2πY[]):
-//   ∫ (2πr/mu0) ∇Ez·∇v dA  -  ω^2 ∫ (2πr*eps0) Ez v dA = 0
-//
-// Eigenvalue λ = ω^2  (rad^2/s^2)
+// Formulation: axisymmetric Helmholtz for curl E (m = 0)
 // -------------------------
 Formulation{
-  { Name Helmholtz_Ez; Type FemEquation;
+  { Name Helmholtz_m0; Type FemEquation;
     Quantity{
-      { Name Ez; Type Local; NameOfSpace Hgrad_Ez; }
+      { Name E; Type Local; NameOfSpace Hcurl; }
+      { Name Ploss2; Type Integral; [CompY[{E} ]] ; In Axis; Jacobian JAxis; Integration Int;  }
     }
     Equation{
       // Stiffness term
       Galerkin{
-        [ (2*Pi*Y[]/mu0) * Dof{d Ez} , {d Ez} ] ;
-        In Vacuum; Jacobian Vol; Integration Int;
+        [ ( 1.0 / mu[] ) * Dof{Curl E} , {Curl E} ] ;
+        In Omega; Jacobian JVol; Integration Int;
       }
 
       // Mass term multiplied by eigenvalue (λ = ω^2)
       Galerkin{
-        DtDtDof[ -(2*Pi*Y[]*eps0) * Dof{Ez} , {Ez} ] ;
+        DtDtDof[ eps[] * Dof{E} , {E} ] ;
         //Order 1;
-        In Vacuum; Jacobian Vol; Integration Int;
+        In Omega; Jacobian JVol; Integration Int;
       }
     }
   }
@@ -149,14 +156,17 @@ Formulation{
 // Resolution: eigen solve (Arpack/SLEPc)
 // -------------------------
 Resolution{
-  { Name Solve_TM010;
+  { Name Solve_m0;
     System{
-      { Name Sys_Ez; NameOfFormulation Helmholtz_Ez; Type Real; }
+      { Name Sys_E_m0;
+        NameOfFormulation Helmholtz_m0; 
+        Type Real;        
+      }
     }
     Operation{
-      GenerateSeparate[Sys_Ez];
-      // EigenSolve[system, nEig, shift_re, shift_im, <optional filter>]
-      EigenSolve[Sys_Ez, neig, shift_re, shift_im, ($EigenvalueReal > 0)];
+      GenerateSeparate[Sys_E_m0];      
+      EigenSolve[Sys_E_m0, neig, shift_re, shift_im, ($EigenvalueReal > 0)];
+      SaveSolutions[Sys_E_m0];
     }
   }
 }
@@ -165,58 +175,74 @@ Resolution{
 // Post-processing: fields + global integrals
 // -------------------------
 PostProcessing{
-  { Name PP_TM010; NameOfFormulation Helmholtz_Ez;
+  { Name PP_m0; NameOfFormulation Helmholtz_m0;
     Quantity{
+      // --- EigenValue ---
+      { Name freq; 
+        Value{ 
+            Local{
+              [$EigenvalueReal / (2.0 * Pi) * 1e-9]; // in GHz
+              In Omega;
+            }
+          }
+      }
+
       // --- Fields (local) ---
-      { Name Ez_map;
+      { Name E_map;
         Value{
-          Local{ [ {Ez} ]; In Vacuum; }
+          Local{ [ {E} ]; In Omega; Jacobian JVol; }
         }
       }
 
-      // Hphi from curl(E):
-      //   Hphi = -(1/(ω μ0)) * ∂Ez/∂r  with r = Y
-      { Name Hphi_map;
+      { Name Ez_map;
+        Value{
+          Local{ [ CompY[ {E} ] ]; In Axis; Jacobian JAxis;}
+        }
+      }
+             
+
+      // Hphi from curl(E):      
+      { Name H_map;
         Value{
           Local{
-            [ -CompY[{d Ez}] / (mu0 * Sqrt[$EigenvalueReal]) ];
-            In Vacuum;
+            [ - {Curl E} / (mu[] * $EigenvalueReal) ];
+            In Omega;
+            Jacobian JVol;
           }
         }
       }
 
-      // For m=0 TM modes in this scalar Ez model, Hr is identically 0
-      { Name Hr_map;
-        Value{
-          Local{ [ 0.0 ]; In Vacuum; }
-        }
-      }
-
       // --- Global quantities (integral values; global sum done in PostOperation) ---
-
       // Stored energy U = (1/4)∫(ε|E|^2 + μ|H|^2)dV
       // with dV = 2πr dA = 2πY[] dA
       { Name U_stored;
         Value{
           Integral{
-            [ 2*Pi*Y[] * (
-                eps0/4 * SquNorm[{Ez}] +
-                mu0/4 * SquNorm[ -CompY[{d Ez}] / (mu0 * Sqrt[$EigenvalueReal]) ]
+            [ (
+                eps[] / 4 * SquNorm[{E}] +
+                mu[] / 4 * SquNorm[ -{Curl E} / (mu[] * $EigenvalueReal) ]
               )
             ];
-            In Vacuum; Jacobian Vol; Integration Int;
+            In Omega; Jacobian JVol; Integration Int;
           }
         }
       }
 
       // Accelerating voltage along axis (no transit-time factor):
       //   Vacc = ∫ Ez(r=0, z) dz  (line integral along Axis curve)
+      
       { Name Vacc;
         Value{
           Integral{
-            [ {Ez} ];
-            In Axis; Jacobian Sur; Integration Int;
+            [ CompY[ {E} ] ];  // Ez component            
+            In Axis; Jacobian JAxis; Integration Int;
           }
+        }
+      }
+      
+      { Name Vacc2;
+        Value{
+          Local { [ { Ploss2 } ] ; In Axis; Jacobian JAxis; }
         }
       }
 
@@ -226,11 +252,11 @@ PostProcessing{
       { Name Ploss;
         Value{
           Integral{
-            [ (2*Pi*Y[]) *
-              (0.5 * Sqrt[ (Sqrt[$EigenvalueReal]*mu0) / (2*sigma_wall) ]) *
-              SquNorm[ -CompY[{d Ez}] / (mu0 * Sqrt[$EigenvalueReal]) ]
+            [
+              (0.5 * Sqrt[ ($EigenvalueReal * mu[]) / (2 * sigma_wall) ]) *
+              SquNorm[ -{Curl E} / (mu[] * $EigenvalueReal) ]              
             ];
-            In WallAll; Jacobian Sur; Integration Int;
+            In AllWall; Jacobian JWall; Integration Int;
           }
         }
       }
@@ -242,32 +268,47 @@ PostProcessing{
 // Post-operation: export maps + compute Q0 and R/Q
 // -------------------------
 PostOperation{
-  { Name PO_TM010;
-    NameOfPostProcessing PP_TM010;
+  { Name PO_m0;
+    NameOfPostProcessing PP_m0;
     Operation{
+      //Print[ freq, OnRegion Omega];
+      Print[
+        { $EigenvalueReal / (2*Pi) * 1e-9 },
+        Format "f(GHz)=%.16g\n"
+      ];
       // Field maps
-      Print[ Ez_map,   OnElementsOf Vacuum, File "TM010_Ez.pos" ];
-      Print[ Hphi_map, OnElementsOf Vacuum, File "TM010_Hphi.pos" ];
-      Print[ Hr_map,   OnElementsOf Vacuum, File "TM010_Hr.pos" ];
+      Print[ E_map, OnElementsOf Omega, File "pillbox_m0_E.pos" ];
+      Print[ Ez_map, OnElementsOf Axis, File "pillbox_m0_Ez.pos" ];
+      Print[ H_map, OnElementsOf Omega, File "pillbox_m0_Hphi.pos" ];     
+      
+      //Print[ Ez_map,
+      // OnLine { {0, 0, 0} {0, L, 0} } {200},
+      // File "pillbox_m0_Ez_axis.pos" 
+      //];         
 
       // Store integrals in run-time variables (StoreInVariable works with OnRegion)
-      Print[ U_stored, OnRegion Vacuum, StoreInVariable $U ];
-      Print[ Ploss,    OnRegion WallAll, StoreInVariable $Pl ];
-      Print[ Vacc,     OnRegion Axis, StoreInVariable $V ];
+      Print[ U_stored[Omega], OnRegion Omega, StoreInVariable $U ];
+      Print[ Ploss[AllWall],  OnRegion AllWall, StoreInVariable $Pl ];
+      
+      // Print[ Vacc[Axis],      OnRegion Axis, StoreInVariable $V];
+      Print[ Vacc2[Axis],     OnGrid Axis, StoreInVariable $V];
 
       // Summary (single line table):
       // columns: f(Hz), U(J), Ploss(W), Vacc(V), Q0, R_over_Q(Ohm)
+      
       Print[
-        { Sqrt[$EigenvalueReal]/(2*Pi),
+        { $EigenvalueReal / (2*Pi) * 1e-9,
           $U,
           $Pl,
           $V,
-          (Sqrt[$EigenvalueReal] * $U) / $Pl,
-          ($V*$V) / (Sqrt[$EigenvalueReal] * $U)
+          ($EigenvalueReal * $U) / $Pl,
+          ($V*$V) / ($EigenvalueReal * $U)
         },
-        Format "%.16g %.16g %.16g %.16g %.16g %.16g\n",
-        File "TM010_summary.txt", Format Table
+        Format "f=%.3f U=%.3f Ploss=%.3f Vacc=%.3f U=%.3f (R/Q)=%.3f\n",
+        File "pillbox_m0_summary.txt", Format Table
       ];
+      
     }
   }
 }
+// ======================================================================
