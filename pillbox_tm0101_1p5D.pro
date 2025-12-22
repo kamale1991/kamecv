@@ -70,7 +70,7 @@ Jacobian{
   }
   { Name JWall;
     Case{
-      { Region AllWall; Jacobian SurAxi; } // 2.5 D 
+      { Region AllWall; Jacobian Sur; } // 2.5 D 
     }
   }
   { Name JAxis;
@@ -133,7 +133,7 @@ Formulation{
   { Name Helmholtz_m0; Type FemEquation;
     Quantity{
       { Name E; Type Local; NameOfSpace Hcurl; }
-      { Name Ploss2; Type Integral; [CompY[{E} ]] ; In Axis; Jacobian JAxis; Integration Int;  }
+      //{ Name Ploss2; Type Integral; [CompY[{E} ]] ; In Axis; Jacobian JAxis; Integration Int;  }
     }
     Equation{
       // Stiffness term
@@ -212,6 +212,16 @@ PostProcessing{
         }
       }
 
+      { Name Hs_map;
+        Value{
+          Local{
+            [ - {Curl E} / (mu[] * $EigenvalueReal) * w[]];
+            In AllWall;
+            Jacobian JWall;
+          }
+        }
+      }      
+
       // --- Global quantities (integral values; global sum done in PostOperation) ---
       // Stored energy U = (1/4)∫(ε|E|^2 + μ|H|^2)dV
       // with dV = 2πr dA = 2πY[] dA
@@ -234,17 +244,11 @@ PostProcessing{
       { Name Vacc;
         Value{
           Integral{
-            [ CompY[ {E} ] ];  // Ez component            
+            [ CompY[ {E} ] ];  // Ez component                        
             In Axis; Jacobian JAxis; Integration Int;
           }
         }
-      }
-      
-      { Name Vacc2;
-        Value{
-          Local { [ { Ploss2 } ] ; In Axis; Jacobian JAxis; }
-        }
-      }
+      }    
 
       // Wall loss using classical surface resistance:
       //   Rs = sqrt( ω*mu0 / (2*sigma) )
@@ -254,7 +258,7 @@ PostProcessing{
           Integral{
             [
               (0.5 * Sqrt[ ($EigenvalueReal * mu[]) / (2 * sigma_wall) ]) *
-              SquNorm[ -{Curl E} / (mu[] * $EigenvalueReal) ]              
+              SquNorm[ Normal[] /\ -{Curl E} / (mu[] * $EigenvalueReal) ]                                                        
             ];
             In AllWall; Jacobian JWall; Integration Int;
           }
@@ -279,7 +283,8 @@ PostOperation{
       // Field maps
       Print[ E_map, OnElementsOf Omega, File "pillbox_m0_E.pos" ];
       Print[ Ez_map, OnElementsOf Axis, File "pillbox_m0_Ez.pos" ];
-      Print[ H_map, OnElementsOf Omega, File "pillbox_m0_Hphi.pos" ];     
+      Print[ H_map, OnElementsOf Omega, File "pillbox_m0_H.pos" ];     
+      Print[ Hs_map, OnElementsOf AllWall, File "pillbox_m0_Hs.pos" ];     
       
       //Print[ Ez_map,
       // OnLine { {0, 0, 0} {0, L, 0} } {200},
@@ -287,25 +292,27 @@ PostOperation{
       //];         
 
       // Store integrals in run-time variables (StoreInVariable works with OnRegion)
-      Print[ U_stored[Omega], OnRegion Omega, StoreInVariable $U ];
-      Print[ Ploss[AllWall],  OnRegion AllWall, StoreInVariable $Pl ];
-      
-      // Print[ Vacc[Axis],      OnRegion Axis, StoreInVariable $V];
-      Print[ Vacc2[Axis],     OnGrid Axis, StoreInVariable $V];
+      Print[ U_stored[Omega], OnGlobal, StoreInRegister 1, Format ValueOnly];
+      Print[ Ploss[AllWall],  OnGlobal, StoreInRegister 2, Format ValueOnly];      
+      Print[ Vacc[Axis],      OnGlobal, StoreInRegister 3, Format ValueOnly];      
 
       // Summary (single line table):
       // columns: f(Hz), U(J), Ploss(W), Vacc(V), Q0, R_over_Q(Ohm)
+
+      //Print[ { GetNumElements[]{AllWall} },
+      //  Format "Number of wall elements: %d\n"
+      //];
       
       Print[
         { $EigenvalueReal / (2*Pi) * 1e-9,
-          $U,
-          $Pl,
-          $V,
-          ($EigenvalueReal * $U) / $Pl,
-          ($V*$V) / ($EigenvalueReal * $U)
+          #1,
+          #2,
+          #3,
+          ($EigenvalueReal * #1) / #2,
+          (#3 * #3) / ($EigenvalueReal * #1)
         },
-        Format "f=%.3f U=%.3f Ploss=%.3f Vacc=%.3f U=%.3f (R/Q)=%.3f\n",
-        File "pillbox_m0_summary.txt", Format Table
+        Format "f=%.3f U=%.16g Ploss=%.16g Vacc=%.3f U=%.3f (R/Q)=%.3f\n"      
+        //File "pillbox_m0_summary.txt"
       ];
       
     }
