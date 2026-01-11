@@ -36,6 +36,22 @@ using namespace gmshfem::equation;
 
 using C = std::complex<double>;
 
+struct ArgvKeeper {
+  std::vector<std::unique_ptr<char[]>> buf; // 文字列本体の所有権
+  std::vector<char*> argv;                  // char* 配列（PETSc/SLEPc 用）
+
+  void push(const std::string& s) {
+    auto p = std::make_unique<char[]>(s.size() + 1);
+    std::memcpy(p.get(), s.c_str(), s.size() + 1); // '\0' までコピー
+    argv.push_back(p.get());
+    buf.push_back(std::move(p));
+  }
+
+  // argv[argc] == nullptr にしておくと安心な実装もあるので付けとく
+  void finalize() { argv.push_back(nullptr); }
+};
+
+/*
 void Projection(const Function<C, Degree::Degree1> &Func_in,
                 field::Field<C, form::Form1> &Field_out,
                 const std::complex<double> &weight,
@@ -67,10 +83,42 @@ void Projection(const Function<C, Degree::Degree1> &Func_in,
   proj.solve();
 
 };
+*/
 
 int main(int argc, char **argv)
-{
-  common::GmshFem fem(argc, argv);
+{  
+  const double f0  = 5.712e9;             // [Hz]  
+  // Target for shift-and-invert (typical generalized EVP uses λ = ω^2)
+  const double f_target      = f0;
+  const double lambda_target = std::pow(2.0 * M_PI * f_target, 2.0);    
+
+  ArgvKeeper a;
+
+  // argv[0] はプログラム名が慣習（PETSc もそういう想定）
+  a.push(argv[0]);
+
+  // ---- ここに「埋め込みたいオプション」を追加 ----
+  a.push("-eps_nev"); a.push("1");
+  a.push("-st_type"); a.push("sinvert");
+  a.push("-st_shift"); a.push(std::to_string(lambda_target));
+  a.push("-eps_target"); a.push(std::to_string(lambda_target));
+  a.push("-eps_target_magnitude");
+  a.push("-st_ksp_type"); a.push("preonly");
+  a.push("-st_pc_type"); a.push("lu");
+  a.push("-st_pc_factor_mat_solver_type"); a.push("mumps");
+  // ---------------------------------------------
+
+  // 既存のコマンドライン引数も活かしたいなら、後ろに付ける
+  // （一般に「後ろに出てきた同名オプション」が勝つので、
+  //  ユーザ指定で上書きできるようにしたい場合はこの順序が便利）
+  for (int i = 1; i < argc; ++i) a.push(argv[i]);
+
+  a.finalize();
+
+  int new_argc = static_cast<int>(a.argv.size()) - 1; // nullptr 分を除く
+  char** new_argv = a.argv.data();  
+
+  common::GmshFem fem(new_argc, new_argv);
 
   //const std::string mshFile = (argc > 1) ? argv[1] : "pillbox_tm010_1p5D.msh";
   const std::string mshFile = "pillbox_tm010_1p5D.msh";
@@ -79,7 +127,7 @@ int main(int argc, char **argv)
   // -----------------------------
   // Constants (same as .pro)
   // -----------------------------
-  const double f0  = 5.712e9;             // [Hz]
+
   const double c0  = 299792458.0;         // [m/s]
   const double x01 = 2.404825557695773;   // J0 first root
 
@@ -94,9 +142,7 @@ int main(int argc, char **argv)
   const int pOrder = 2;
   const int neig   = 3;
 
-  // Target for shift-and-invert (typical generalized EVP uses λ = ω^2)
-  const double f_target      = f0;
-  const double lambda_target = std::pow(2.0 * M_PI * f_target, 2.0);  
+
 
   // -----------------------------
   // Domains (physical groups)
@@ -195,18 +241,6 @@ int main(int argc, char **argv)
         pOrder
       );
 
-      std::vector<Domain> dirichiletWalls = {Wall};
-
-      Projection(
-        Func_E_i,
-        Ei_h,
-        wAxiC,
-        Omega,
-        gVol,
-        dirichiletWalls  // PEC wall: tangential E = 0
-      );
-
-      /*
 
       {
         // PEC wall: tangential E = 0 （元の E と同じ拘束を付ける）
@@ -236,7 +270,7 @@ int main(int argc, char **argv)
         proj.assemble();
         proj.solve();  // これで Ei_h の DOF(_values) が埋まる :contentReference[oaicite:1]{index=1}      
       }
-      */
+
 
       auto func_curlEi_phi = zComp(curl(Ei_h));              // Field -> Function
       auto func_Hi_phi   = -(1.0 / (mu0 * omega)) * func_curlEi_phi;   // degree 1
@@ -281,7 +315,7 @@ int main(int argc, char **argv)
 
       // Accelerating voltage along axis:
       //   Vacc = ∫ Ez(r=0,z) dz
-      C Vacc = post::integrate(Ez_i, Axis, gLin);
+      C Vacc = post::integrate(Ez_i, Axis, gLin); // なぜかゼロになる
 
       // Wall loss (surface resistance):
       //   Rs = sqrt( ω μ0 / (2 σ) )
@@ -293,7 +327,7 @@ int main(int argc, char **argv)
       );
 
       const double Q0     = omega * std::real(U) / std::real(Ploss);
-      const double RoverQ = (std::real(Vacc) * std::real(Vacc)) / (omega * omega * std::real(U));
+      const double RoverQ = (std::abs(Vacc) * std::abs(Vacc)) / (omega * omega * std::real(U));
 
       std::cout
         << "U=" << U
@@ -317,7 +351,7 @@ int main(int argc, char **argv)
     }
   }
   
-  /*
+
   C Vcheck = post::integrate(
     wAxiC * C(1.0 / (M_PI * R * R * L)),
     Omega, gVol
@@ -328,7 +362,7 @@ int main(int argc, char **argv)
   );
 
   std::cout << "Vcheck=" << Vcheck << " Scheck=" << Scheck << "\n";
-  */
+
 
   return 0;
 }
